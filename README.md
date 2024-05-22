@@ -1,7 +1,5 @@
 # Green Rust
 
-**Note:** This is a work in progress, which isn't finished yet. It implements the basic structure needed, but is missing some polishing and optimization.
-
 ## About
 
 Green Rust is a captivating console application that showcases a mesmerizing matrix-inspired waterfall animation of characters.
