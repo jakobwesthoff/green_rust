@@ -4,7 +4,8 @@
 
 Green Rust is a captivating console application that showcases a mesmerizing matrix-inspired waterfall animation of characters.
 
-<img src="thumbnail.png" width="75%" />
+<img src="thumbnail.png" width="75%" /><br />
+<img src="thumbnail2.png" width="37%" /><img src="thumbnail3.png" width="37%" />
 
 ## Reasoning
 
