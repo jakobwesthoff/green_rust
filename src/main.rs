@@ -150,10 +150,53 @@ impl MatrixWaterfall {
     }
 }
 
+fn usage(command: &str) {
+    eprintln!("Usage:");
+    eprintln!("  {command} [OPTIONS]");
+    eprintln!("Options:");
+    eprintln!("  --color HEXCOLOR");
+    eprintln!("  --speed UPDATES_PER_SEC");
+}
+
 fn main() -> Result<()> {
+    let mut args = std::env::args();
+    let command = args.next().expect("args should have at least command");
+
+    let mut base_color = Color::from_rgb(0, 255, 43);
+    let mut speed: u32 = 13;
+
+    while let Some(arg) = args.next() {
+        match arg.as_str() {
+            "--help" => {
+                usage(&command);
+                std::process::exit(0);
+            }
+            "--color" => {
+                let hexcolor = args.next().expect("hex color provided after --color");
+                base_color = Color::from_hexstring(hexcolor.as_str())
+                    .expect("provided color to be valid hexstring");
+            }
+            "--speed" => {
+                speed = args
+                    .next()
+                    .expect("speed provided after --speed")
+                    .parse::<u32>()
+                    .expect("specified speed is a number");
+                if speed > 120 {
+                    eprintln!("Speed is limited to 0-120");
+                    usage(&command);
+                    std::process::exit(1);
+                }
+            }
+            _ => {
+                eprintln!("Unknown argument {arg}");
+                usage(&command);
+                std::process::exit(1);
+            }
+        }
+    }
+
     let (width, height) = terminal::size().context("determine terminal size")?;
-    let base_color = Color::from_rgb(0, 255, 43);
-    // let base_color = Color::from_rgb(255, 160, 0);
 
     let mut waterfall = MatrixWaterfall::new(width, height, base_color);
     let mut stdout = std::io::stdout();
@@ -164,9 +207,11 @@ fn main() -> Result<()> {
         .as_micros() as u64;
     let mut rand = Xoshiro256PlusPlus::seed_from_u64(seed);
 
+    let frame_wait = (1000f64 / speed as f64).round() as u64;
+
     loop {
         waterfall.render(&mut stdout)?;
         waterfall.step(&mut rand);
-        std::thread::sleep(Duration::from_millis(75));
+        std::thread::sleep(Duration::from_millis(frame_wait));
     }
 }

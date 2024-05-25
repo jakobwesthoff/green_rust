@@ -1,3 +1,5 @@
+use anyhow::{anyhow, Result};
+
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Color {
@@ -43,6 +45,27 @@ impl Color {
         };
 
         color_slice
+    }
+
+    pub fn from_hexstring(hex: &str) -> Result<Color> {
+        if hex.len() != 6 && hex.len() != 8 {
+            return Err(anyhow!(
+                "Hex string has not the right length. Expected 6 or 8 got {len}",
+                len = hex.len()
+            ));
+        }
+
+        let r = u8::from_str_radix(&hex[0..2], 16).expect("r element to be hex byte");
+        let g = u8::from_str_radix(&hex[2..4], 16).expect("g element to be hex byte");
+        let b = u8::from_str_radix(&hex[4..6], 16).expect("b element to be hex byte");
+
+        let a = if hex.len() == 6 {
+            255
+        } else {
+            u8::from_str_radix(&hex[6..8], 16).expect("a element to be hex byte")
+        };
+
+        Ok(Self { r, g, b, a })
     }
 
     pub const fn from_rgba(r: u8, b: u8, g: u8, a: u8) -> Self {

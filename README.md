@@ -26,7 +26,14 @@ Simply run the built executable in any ANSI RGB compatible terminal with the com
 target/release/green_rust
 ```
 
+You may change the color and speed using command line arguments. Just issue a `--help` to see them all:
+
+```shell
+  target/release/green_rust --help
+```
+
 ## Contribution
+
 Contributions to Green Rust are welcome! Whether you want to add new features, fix bugs, or improve documentation, feel free to submit a pull request. For major changes, please open an issue first to discuss the proposed changes.
 
 ## License
